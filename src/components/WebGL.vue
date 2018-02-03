@@ -21,11 +21,19 @@ var ZVAL = 0;
 
 export default {
   name: "WebGL",
-  props: [changeMethod],
-  methods: {
-    update: function(height_1, height_2, height_3) {
-      this.updateZiggurat(height_1,height_2,height_3);
+  props: ['height_1', 'height_2', 'height_3'],
+  watch: {
+    height_1: function(value) {
+      this.updateZiggurat(value, this.height_2, this.height_3);
     },
+    height_2: function(value) {
+      this.updateZiggurat(this.height_1, value, this.height_3);
+    },
+    height_3: function(value) {
+      this.updateZiggurat(this.height_1, this.height_2, value);
+    }
+  },
+  methods: {
     init2: function() {
         scene = new THREE.Scene();
         scene.background = new THREE.Color( 0xcccccc );
@@ -36,7 +44,7 @@ export default {
         camera.position.z = 300;
         controls = new OrbitControls(camera, renderer.domElement);
         controls.addEventListener('change', this.render);
-        this.createStartingZiggurat(20, 20, 20);
+        this.createStartingZiggurat(this.height_1, this.height_2, this.height_3);
         this.createLight();
         window.addEventListener( 'resize', this.onWindowResize, false );
     },
@@ -107,7 +115,6 @@ export default {
     }
   },
   mounted: function () {
-
     this.init2();
     this.render();
   }

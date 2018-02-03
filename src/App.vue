@@ -17,7 +17,7 @@
         <div class="col-sm-3"></div>
       </div>
     </div>
-    <WebGL/>
+    <WebGL v-bind:height_1="height_1" v-bind:height_2="height_2" v-bind:height_3="height_3"/>
   </div>
 </template>
 
@@ -27,6 +27,7 @@ import WebGL from "./components/WebGL";
 
 var min_height = 1;
 var max_height = 100;
+const STARTING_HEIGHT = 20;
 
 export default {
   name: "App",
@@ -37,9 +38,9 @@ export default {
   data() {
     return {
       min_height: min_height,
-      height_1: min_height,
-      height_2: min_height,
-      height_3: min_height,
+      height_1: STARTING_HEIGHT,
+      height_2: STARTING_HEIGHT,
+      height_3: STARTING_HEIGHT,
       total_height: min_height * 3
     }
   },
