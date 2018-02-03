@@ -15,10 +15,6 @@ var WIDTH = 400;
 var HEIGHT = 300;
 var ZVAL = 0;
 
-    // // Get the DOM element to attach to
-    // container =
-    //     $('#container');
-
 export default {
   name: "WebGL",
   props: ['height_1', 'height_2', 'height_3'],
@@ -49,11 +45,14 @@ export default {
         window.addEventListener( 'resize', this.onWindowResize, false );
     },
     updateZiggurat: function(topHeight, midHeight, bottomHeight) {
+        
         topCube.position.y = (topHeight + midHeight) / 2;
-        topCube.geometry.parameters.height = topHeight;
-        midCube.geometry.parameters.height = midHeight;
         botCube.position.y = -((bottomHeight + midHeight) / 2);
-        botCube.geometry.parameters.height = bottomHeight;
+
+        topCube.scale.y = topHeight;
+        midCube.scale.y = midHeight;
+        botCube.scale.y = bottomHeight;
+
         this.render();
     },
     createStartingZiggurat: function(topHeight, medHeight, lowHeight) {
@@ -69,18 +68,23 @@ export default {
         var TOPWIDTH = 20;
         var MIDWIDTH = 40;
         var BOTWIDTH = 60;
-        var topGeometry = new THREE.CubeGeometry(TOPWIDTH, topHeight, TOPWIDTH)
+        var topGeometry = new THREE.BoxGeometry(TOPWIDTH, 1, TOPWIDTH)
         topCube = new THREE.Mesh(topGeometry, topMaterial);
+        topCube.scale.y = topHeight;
         topCube.position.z = ZVAL;
         topCube.position.y = (topHeight + medHeight) / 2;
         scene.add(topCube);
-        var medGeometry = new THREE.CubeGeometry(MIDWIDTH, medHeight, MIDWIDTH)
+
+        var medGeometry = new THREE.BoxGeometry(MIDWIDTH, 1, MIDWIDTH)
         midCube = new THREE.Mesh(medGeometry, midMaterial);
+        midCube.scale.y = medHeight;
         midCube.position.z = ZVAL;
         midCube.position.y = 0;
         scene.add(midCube);
-        var lowGeometry = new THREE.CubeGeometry(BOTWIDTH, lowHeight, BOTWIDTH)
+
+        var lowGeometry = new THREE.BoxGeometry(BOTWIDTH, 1, BOTWIDTH)
         botCube = new THREE.Mesh(lowGeometry, botMaterial);
+        botCube.scale.y = lowHeight;
         botCube.position.z = ZVAL;
         botCube.position.y = -((lowHeight + medHeight) / 2);
         scene.add(botCube);
