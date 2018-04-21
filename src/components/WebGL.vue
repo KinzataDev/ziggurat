@@ -7,6 +7,7 @@
 const THREE = require('three');
 const exportSTL = require('threejs-export-stl');
 var OrbitControls = require('three-orbit-controls')(THREE);
+const fileSaver = require('file-saver');
 
 var camera, controls, scene, renderer;
 var topCube, midCube, botCube;
@@ -58,7 +59,7 @@ export default {
         topCube.scale.y = topHeight;
         midCube.scale.y = midHeight;
         botCube.scale.y = bottomHeight;
-
+        
         this.render();
     },
     createStartingZiggurat: function(topHeight, medHeight, lowHeight) {
@@ -125,14 +126,16 @@ export default {
     exportToSTLFile: function() {
         // todo get meshes from the existing cubes
         var bigOlGeometry = new THREE.Geometry();
-        bigOlGeometry.mergeMesh(topCube);
-        bigOlGeometry.mergeMesh(midCube);
-        bigOlGeometry.mergeMesh(botCube);
+        bigOlGeometry.merge(topCube.geometry, topCube.matrix);
+        bigOlGeometry.merge(midCube.geometry, midCube.matrix);
+        bigOlGeometry.merge(botCube.geometry, botCube.matrix);
 
-        var stringExport = exportSTL.fromGeometry(bigOlGeometry, false)
+        var stringExport = exportSTL.fromGeometry(bigOlGeometry)
         // todo merge the cube meshes into one geometry
         // todo export the geometry to an STL file
-        alert(JSON.stringify(stringExport));
+        var blob = new Blob([stringExport], {type: exportSTL.mimeType});
+
+        fileSaver.saveAs(blob, 'ziggurat.stl');
     }
   },
   mounted: function () {
