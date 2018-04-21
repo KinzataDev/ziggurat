@@ -5,11 +5,13 @@
 <script>
 
 const THREE = require('three');
+const exportSTL = require('threejs-export-stl');
 var OrbitControls = require('three-orbit-controls')(THREE);
 
 var camera, controls, scene, renderer;
 var topCube, midCube, botCube;
 var container;
+var geometry;
 // Set the scene size.
 var WIDTH = 400;
 var HEIGHT = 300;
@@ -43,6 +45,10 @@ export default {
         this.createStartingZiggurat(this.height_1, this.height_2, this.height_3);
         this.createLight();
         window.addEventListener( 'resize', this.onWindowResize, false );
+        this.$on("export_stl_file_event", function() {
+            alert('some stuff!')
+            this.exportToSTLFile();
+        });
     },
     updateZiggurat: function(topHeight, midHeight, bottomHeight) {
         
@@ -111,11 +117,22 @@ export default {
     render: function() {
         renderer.render( scene, camera );
     },
-      
     onWindowResize: function() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize( window.innerWidth, window.innerHeight );
+    },
+    exportToSTLFile: function() {
+        // todo get meshes from the existing cubes
+        var bigOlGeometry = new THREE.Geometry();
+        bigOlGeometry.mergeMesh(topCube);
+        bigOlGeometry.mergeMesh(midCube);
+        bigOlGeometry.mergeMesh(botCube);
+
+        var stringExport = exportSTL.fromGeometry(bigOlGeometry, false)
+        // todo merge the cube meshes into one geometry
+        // todo export the geometry to an STL file
+        alert(JSON.stringify(stringExport));
     }
   },
   mounted: function () {

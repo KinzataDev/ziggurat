@@ -10,14 +10,14 @@
           <vue-slider ref="slider" :min="min_height" :max="max_height_2" v-model="height_2" tooltip="hover"></vue-slider>
           <label>Height 3: {{height_3}}</label>
           <vue-slider ref="slider" :min="min_height" :max="max_height_3" v-model="height_3" tooltip="hover"></vue-slider>
-
+          <button v-on:click="export_stl_file">Export STL</button>
           <br/>
           Total Height: {{total_height}}
         </div>
         <div class="col-sm-3"></div>
       </div>
     </div>
-    <WebGL v-bind:height_1="height_1" v-bind:height_2="height_2" v-bind:height_3="height_3"/>
+    <webgl-comp ref="webgl" v-bind:height_1="height_1" v-bind:height_2="height_2" v-bind:height_3="height_3"/>
   </div>
 </template>
 
@@ -33,7 +33,7 @@ export default {
   name: "App",
   components: {
     vueSlider,
-    WebGL
+    'webgl-comp': WebGL
   },
   data() {
     return {
@@ -42,6 +42,11 @@ export default {
       height_2: STARTING_HEIGHT,
       height_3: STARTING_HEIGHT,
       total_height: min_height * 3
+    }
+  },
+  methods: {
+    export_stl_file: function() {
+      this.$refs.webgl.exportToSTLFile();
     }
   },
   computed: {
